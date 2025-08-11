@@ -1,16 +1,15 @@
 #!/bin/sh
-
 set -e
 
-echo Waiting for database...
-
-while ! nc -z ${ODOO_DATABASE_HOST} ${ODOO_DATABASE_PORT} 2>&1; do sleep 1; done; 
-
-echo Database is now available
+echo "Waiting for database..."
+while ! nc -z "${ODOO_DATABASE_HOST}" "${ODOO_DATABASE_PORT}" 2>&1; do
+    sleep 1
+done
+echo "Database is now available"
 
 exec odoo \
     --http-port="${PORT}" \
-    --init=all \
+    --init=website_slides_access_duration \
     --without-demo=True \
     --proxy-mode \
     --db_host="${ODOO_DATABASE_HOST}" \
@@ -18,6 +17,7 @@ exec odoo \
     --db_user="${ODOO_DATABASE_USER}" \
     --db_password="${ODOO_DATABASE_PASSWORD}" \
     --database="${ODOO_DATABASE_NAME}" \
+    --addons-path="/usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons" \
     --smtp="${ODOO_SMTP_HOST}" \
     --smtp-port="${ODOO_SMTP_PORT_NUMBER}" \
     --smtp-user="${ODOO_SMTP_USER}" \
